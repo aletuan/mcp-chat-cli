@@ -46,17 +46,56 @@ def edit_document(
     name="list_documents",
     description="Get a list of all available document IDs"
 )
+@mcp.resource("docs://documents")
 def list_documents():
     """Return a list of all available document IDs"""
     return list(docs.keys())
 
-@mcp.resource("docs://documents")
-def list_documents_resource():
-    """Resource to return a list of all available document IDs"""
-    return list(docs.keys())
 # TODO: Write a resource to return the contents of a particular doc
+@mcp.tool(
+    name="get_document_content",
+    description="Get the contents of a specific document by its ID"
+)
+@mcp.resource("docs://documents/{doc_id}")
+def get_document_content(
+    doc_id: str = Field(description="ID of the document to retrieve")
+):
+    """Return the contents of a specific document"""
+    if doc_id not in docs:
+        raise ValueError(f"Document with id '{doc_id}' not found")
+    return docs[doc_id]
+
 # TODO: Write a prompt to rewrite a doc in markdown format
+@mcp.tool(
+    name="rewrite_doc_markdown",
+    description="Rewrite a document in proper markdown format"
+)
+@mcp.prompt("rewrite_markdown")
+def rewrite_doc_markdown(
+    doc_id: str = Field(description="ID of the document to rewrite in markdown")
+):
+    """Rewrite a document in markdown format"""
+    if doc_id not in docs:
+        raise ValueError(f"Document with id '{doc_id}' not found")
+
+    content = docs[doc_id]
+    return f"Please rewrite the following document in proper markdown format:\n\n{content}"
+
 # TODO: Write a prompt to summarize a doc
+@mcp.tool(
+    name="summarize_doc",
+    description="Generate a summary of a document"
+)
+@mcp.prompt("summarize")
+def summarize_doc(
+    doc_id: str = Field(description="ID of the document to summarize")
+):
+    """Generate a summary of a document"""
+    if doc_id not in docs:
+        raise ValueError(f"Document with id '{doc_id}' not found")
+
+    content = docs[doc_id]
+    return f"Please provide a concise summary of the following document:\n\n{content}"
 
 
 if __name__ == "__main__":
