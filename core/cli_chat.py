@@ -62,8 +62,13 @@ class CliChat(Chat):
         words = query.split()
         command = words[0].replace("/", "")
 
+        # Handle document ID, removing @ symbol if present
+        doc_id = words[1]
+        if doc_id.startswith("@"):
+            doc_id = doc_id[1:]
+
         messages = await self.doc_client.get_prompt(
-            command, {"doc_id": words[1]}
+            command, {"doc_id": doc_id}
         )
 
         self.messages += convert_prompt_messages_to_message_params(messages)
