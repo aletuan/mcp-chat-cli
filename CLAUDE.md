@@ -11,8 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Run with additional MCP servers: `python main.py server1.py server2.py`
 
 ### Environment Configuration
-- Required: `ANTHROPIC_API_KEY` in `.env` file
-- Optional: `CLAUDE_MODEL` in `.env` file
+- Required: `ANTHROPIC_API_KEY` - Your Anthropic API key from console.anthropic.com
+- Required: `CLAUDE_MODEL` - Anthropic model to use (e.g., "claude-3-5-sonnet-20241022")
 - Optional: `USE_UV=1` to force uv usage for MCP server execution
 
 ## Architecture Overview
@@ -25,7 +25,7 @@ This is an MCP (Model Control Protocol) chat application that enables interactiv
 - `core/cli_chat.py`: Chat implementation with document and command processing
 - `core/cli.py`: CLI interface with auto-completion and command suggestions
 - `mcp_client.py`: MCP client wrapper (contains TODO placeholders for full implementation)
-- `mcp_server.py`: Basic MCP server with document storage (incomplete, needs implementation)
+- `mcp_server.py`: Complete MCP server with document storage and full feature implementation
 
 ### Key Architecture Patterns
 
@@ -46,17 +46,32 @@ This is an MCP (Model Control Protocol) chat application that enables interactiv
 - Command auto-suggestion based on available MCP prompts
 - In-memory history for previous queries
 
-### Incomplete Implementation Areas
+### Implementation Status
 
-The codebase has several TODO markers in critical areas:
+**mcp_server.py:** ✅ Fully implemented with all features:
+- Document CRUD operations (read, edit)
+- Resource endpoints for document listing and retrieval
+- Tool interfaces for all document operations
+- Prompt templates for markdown conversion and summarization
+- Clean, non-duplicated code using multiple decorators per function
 
-**mcp_client.py:** All MCP protocol methods are stubbed (list_tools, call_tool, list_prompts, get_prompt, read_resource)
+**mcp_client.py:** ⚠️ Contains placeholder implementations:
+- All MCP protocol methods are stubbed (list_tools, call_tool, list_prompts, get_prompt, read_resource)
+- Needs implementation for full MCP client functionality
 
-**mcp_server.py:** Missing implementations for:
-- Document reading/editing tools
-- Document listing resource
-- Document content resource
-- Markdown conversion and summarization prompts
+### Available MCP Server Features
+
+The server provides these interfaces (using dual decorators for tool + resource/prompt access):
+
+**Document Operations:**
+- `read_doc_contents` / `get_document_content`: Read document by ID
+- `edit_document`: Edit documents via string replacement
+- `list_documents` + `docs://documents` resource: Get all document IDs
+- `docs://documents/{doc_id}` resource: Get specific document content
+
+**AI Processing:**
+- `rewrite_doc_markdown` + `rewrite_markdown` prompt: Convert to markdown
+- `summarize_doc` + `summarize` prompt: Generate document summaries
 
 ### Development Notes
 
@@ -65,3 +80,4 @@ The codebase has several TODO markers in critical areas:
 - Uses FastMCP for server implementation
 - Uses prompt-toolkit for rich CLI experience
 - Async/await throughout for concurrent MCP connections
+- Server functions use multiple decorators to avoid code duplication
