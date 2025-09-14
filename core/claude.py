@@ -3,8 +3,8 @@ from anthropic.types import Message
 
 
 class Claude:
-    def __init__(self, model: str):
-        self.client = Anthropic()
+    def __init__(self, model: str, api_key: str = None):
+        self.client = Anthropic(api_key=api_key) if api_key else Anthropic()
         self.model = model
 
     def add_user_message(self, messages: list, message):
