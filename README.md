@@ -21,6 +21,8 @@ USE_UV=1  # Set to 1 if using uv, 0 otherwise
 
 **Important:** Replace `your_actual_api_key_here` with your real Anthropic API key from the [Anthropic Console](https://console.anthropic.com/).
 
+**Note:** The application uses `load_dotenv(override=True)` to ensure your `.env` file values take precedence over any system environment variables, providing reliable configuration.
+
 ### Step 2: Install dependencies
 
 #### Option 1: Setup with uv (Recommended)
@@ -127,12 +129,23 @@ The MCP server (`mcp_server.py`) provides the following fully implemented featur
 - `rewrite_markdown`: Prompt for markdown conversion
 - `summarize`: Prompt for document summarization
 
+### Application Architecture
+
+**Fully Implemented Components:**
+- ✅ **MCP Server** (`mcp_server.py`): Complete with all tools, resources, and prompts
+- ✅ **MCP Client** (`mcp_client.py`): Full MCP protocol implementation
+- ✅ **Authentication**: Reliable API key loading from .env with override support
+- ✅ **Document System**: Working document retrieval and command processing
+- ✅ **CLI Interface**: Interactive chat with auto-completion and history
+
 ### Extending Functionality
 
 To extend the application:
 
-1. Add new documents to the `docs` dictionary in `mcp_server.py`
-2. Implement additional MCP client functionality in `mcp_client.py`
+1. **Add Documents**: Add new entries to the `docs` dictionary in `mcp_server.py`
+2. **Create New Tools**: Add new `@mcp.tool()` decorated functions in `mcp_server.py`
+3. **Add Resources**: Create new `@mcp.resource()` endpoints for data access
+4. **Custom Prompts**: Define new `@mcp.prompt()` templates for AI processing
 
 ### Linting and Typing Check
 
